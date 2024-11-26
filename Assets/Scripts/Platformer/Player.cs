@@ -15,6 +15,9 @@ namespace Platformer
         private int _currentHealth;
         
         private bool IsDead => 0 >= _currentHealth;
+        
+        private const string HitAnimation = "hit";
+        private const string DeathAnimation = "die";
 
         private void Awake()
         {
@@ -34,23 +37,25 @@ namespace Platformer
                 }
                 else
                 {
-                    _animator.SetTrigger("hit");
+                    _animator.SetTrigger(HitAnimation);
                 }
             }
         }
 
         private IEnumerator Death()
         {
-            _animator.SetTrigger("hit");
-            _animator.SetBool("die", true);
+            _animator.SetTrigger(HitAnimation);
+            _animator.SetBool(DeathAnimation, true);
             yield return new WaitForSeconds(2.5f);
             gameObject.SetActive(false);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log(other.gameObject.name);
-            Destroy(other.gameObject);
+            if (other.TryGetComponent(out Coin coin))
+            {
+                Destroy(coin.gameObject);
+            }
         }
     }
 }

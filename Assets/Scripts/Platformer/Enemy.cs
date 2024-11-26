@@ -5,25 +5,44 @@ namespace Platformer
 {
     public class Enemy : MonoBehaviour
     {
-        private const int Damage = 35;
-        private const float RadiusAttack = 0.45f;
-        private const float Reload = 1.5f;
+        [SerializeField] private CheckPlayer _checkPlayer;
         
-        private float timeToAttack;
+        private const int Damage = 35;
+        private const float Reload = 0.5f;
+        private const float JumpForce = 6f;
+        
+        private float _timeToAttack;
+        
+        private void OnEnable()
+        {
+            _checkPlayer.OnPlayerEnter += StartAtack;
+        }
+        
+        private void OnDisable()
+        {
+            _checkPlayer.OnPlayerEnter -= StartAtack;
+        }
 
         private void Update()
         {
-            Collider2D collider = Physics2D.OverlapCircle(transform.position, RadiusAttack, LayerMask.GetMask("Player"));
+            _timeToAttack += Time.deltaTime;
+        }
 
-            timeToAttack += Time.deltaTime;
-
-            if (collider is not null)
+        private void StartAtack(Player player)
+        {
+            if (player is not null)
             {
-                if (timeToAttack >= Reload && collider.TryGetComponent(out Player player))
-                {
-                    player.GetDamage(Damage);
-                    timeToAttack = 0;
-                }
+                Attack(player);
+            }
+        }
+        
+        private void Attack(Player player)
+        {
+            if (_timeToAttack >= Reload)
+            {
+                player.GetDamage(Damage);
+                player.GetComponent<Rigidbody2D>().AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+                _timeToAttack = 0;
             }
         }
     }
