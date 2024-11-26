@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Platformer
@@ -8,7 +9,7 @@ namespace Platformer
         [SerializeField] private CheckPlayer _checkPlayer;
         
         private const int Damage = 35;
-        private const float Reload = 0.5f;
+        private const float Reload = 3f;
         private const float JumpForce = 6f;
         
         private float _timeToAttack;

@@ -7,10 +7,10 @@ namespace Platformer
     public class CheckPlayer : MonoBehaviour
     {
         public event UnityAction<Player> OnPlayerEnter;
-        
-        private void OnTriggerEnter2D(Collider2D collision)
+
+        private void OnTriggerStay2D(Collider2D other)
         {
-            if (collision.TryGetComponent(out Player player))
+            if (other.TryGetComponent(out Player player))
             {
                 OnPlayerEnter?.Invoke(player);
             }
